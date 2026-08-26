@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title id="page-title">دعوة زفاف</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:        #1d2a26;
+    --ink-soft:   #46574f;
+    --gold:       #b08d42;
+    --gold-light: #d8bd7e;
+    --green:      #14493c;
+    --green-deep: #0d2f27;
+    --cream:      #fbf8f2;
+    --cream-2:    #f4eee2;
+    --rose:       #c9a0a0;
+    --radius:     22px;
+    --shadow:     0 24px 60px -30px rgba(13,47,39,.45);
+    --font-ar-display: "Amiri", "Cairo", "Times New Roman", serif;
+    --font-ar-body:    "Cairo", "Tajawal", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ -webkit-text-size-adjust:100%; }
+
+  body{
+    margin:0;
+    padding:clamp(14px, 3.5vw, 56px) clamp(12px, 3vw, 40px);
+    min-height:100vh;
+    direction:rtl;
+    text-align:right;
+    font-family:var(--font-ar-body);
+    color:var(--ink);
+    background:
+      radial-gradient(1100px 620px at 80% -8%, #ffffff 0%, rgba(255,255,255,0) 60%),
+      radial-gradient(900px 620px at 10% 108%, #f0e7d5 0%, rgba(240,231,213,0) 62%),
+      linear-gradient(170deg, var(--cream) 0%, var(--cream-2) 100%);
+    position:relative;
+    overflow-x:hidden;
+    line-height:1.85;
+    /* استخدام الأرقام العربية (0-9) بشكل موحّد */
+    font-variant-numeric:lining-nums proportional-nums;
+    font-feature-settings:"lnum" 1, "pnum" 1;
+  }
+
+  /* عزل الأرقام ثنائي الاتجاه حتى تظهر بترتيبها الصحيح داخل النص العربي */
+  .rsvp .note b,
+  .btn{
+    unicode-bidi:isolate;
+  }
+
+  /* ---------- ستارة الافتتاح ---------- */
+  .curtain{
+    position:fixed;
+    inset:0;
+    z-index:60;
+    pointer-events:auto;
+    visibility:visible;
+    opacity:1;
+    transition:visibility 0s linear 1.35s, opacity .4s ease .9s;
+  }
+  .curtain.open{
+    visibility:hidden;
+    opacity:0;
+    pointer-events:none;
+  }
+  .curtain-panel{
+    position:absolute;
+    top:0;
+    height:100%;
+    width:51%;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.45), rgba(0,0,0,0) 30%, rgba(0,0,0,.12) 62%, rgba(0,0,0,.5)),
+      repeating-linear-gradient(90deg, var(--green-deep) 0 16px, #0a261f 16px 32px, #0e342b 32px 50px, #0a261f 50px 66px);
+    box-shadow:inset 0 0 70px rgba(0,0,0,.5);
+    transition:transform 1.2s cubic-bezier(.76,0,.24,1);
+    will-change:transform;
+  }
+  .curtain-panel.left{ left:0; }
+  .curtain-panel.right{ right:0; }
+  .curtain-panel::after{
+    content:"";
+    position:absolute;
+    top:0; bottom:0;
+    width:6px;
+    background:linear-gradient(var(--gold-light), var(--gold), var(--gold-light));
+    box-shadow:0 0 20px rgba(176,141,66,.65);
+  }
+  .curtain-panel.left::after{ right:0; }
+  .curtain-panel.right::after{ left:0; }
+  .curtain.open .curtain-panel.left{ transform:translateX(-101%); }
+  .curtain.open .curtain-panel.right{ transform:translateX(101%); }
+
+  .curtain-seal{
+    position:absolute;
+    left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    z-index:2;
+    text-align:center;
+    color:var(--gold-light);
+    cursor:pointer;
+    transition:opacity .45s ease, transform .45s ease;
+  }
+  .curtain.open .curtain-seal{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(.55);
+  }
+  .curtain-seal .ring{
+    width:104px; height:104px;
+    margin:0 auto 14px;
+    border-radius:50%;
+    border:1px solid rgba(216,189,126,.7);
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 50% 38%, rgba(216,189,126,.22), rgba(13,47,39,0));
+  }
+  .curtain-seal .ring img{ width:76px; height:76px; object-fit:contain; }
+  .curtain-seal .hint{ font-family:var(--font-ar-display); font-size:1.25rem; letter-spacing:.08em; }
+  .curtain-seal .sub-hint{ font-size:.8rem; opacity:.82; margin-top:4px; letter-spacing:.04em; }
+
+  .sheet{
+    position:relative;
+    z-index:1;
+    max-width:940px;
+    margin:0 auto;
+  }
+
+  /* ---------- البطاقة ---------- */
+  .card{
+    position:relative;
+    background:linear-gradient(180deg, #fffdf9 0%, #fdfaf3 55%, #fbf6ec 100%);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:clamp(30px, 5.2vw, 74px) clamp(20px, 5vw, 76px) clamp(34px, 5vw, 68px);
+    overflow:hidden;
+    border:1px solid rgba(176,141,66,.28);
+  }
+  /* إطار مزدوج داخلي */
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:clamp(10px, 1.6vw, 18px);
+    border:1px solid rgba(176,141,66,.38);
+    border-radius:calc(var(--radius) - 10px);
+    pointer-events:none;
+  }
+  .card::after{
+    content:"";
+    position:absolute;
+    inset:calc(clamp(10px, 1.6vw, 18px) + 5px);
+    border:1px solid rgba(176,141,66,.16);
+    border-radius:calc(var(--radius) - 14px);
+    pointer-events:none;
+  }
+
+  /* ---------- زخارف الزوايا الزهرية ---------- */
+  .corner{
+    position:absolute;
+    width:clamp(84px, 15vw, 165px);
+    height:auto;
+    color:var(--gold);
+    opacity:.72;
+    pointer-events:none;
+  }
+  .corner-tr{ top:clamp(14px,2vw,24px); right:clamp(14px,2vw,24px); }
+  .corner-tl{ top:clamp(14px,2vw,24px); left:clamp(14px,2vw,24px); transform:scaleX(-1); }
+  .corner-br{ bottom:clamp(14px,2vw,24px); right:clamp(14px,2vw,24px); transform:scaleY(-1); }
+  .corner-bl{ bottom:clamp(14px,2vw,24px); left:clamp(14px,2vw,24px); transform:scale(-1,-1); }
+
+  /* ---------- الترويسة ---------- */
+  header.head{
+    text-align:center;
+    position:relative;
+    z-index:2;
+  }
+
+  .bismillah{
+    font-family:var(--font-ar-display);
+    font-size:clamp(1rem, 2.4vw, 1.3rem);
+    color:var(--gold);
+    letter-spacing:.5px;
+    margin:0 0 6px;
+  }
+
+  .eyebrow{
+    font-size:clamp(.68rem, 1.9vw, .8rem);
+    letter-spacing:.42em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    margin:0 0 22px;
+    font-weight:500;
+  }
+
+  .monogram{
+    width:clamp(112px, 22vw, 156px);
+    height:auto;
+    display:block;
+    margin:4px auto 14px;
+    color:var(--green);
+  }
+
+  .invite-line{
+    font-family:var(--font-ar-body);
+    font-weight:300;
+    font-size:clamp(.95rem, 2.4vw, 1.08rem);
+    color:var(--ink-soft);
+    margin:0 auto 10px;
+    max-width:34rem;
+  }
+
+  .names{
+    font-family:var(--font-ar-display);
+    font-weight:700;
+    font-size:clamp(2.4rem, 9.5vw, 4.7rem);
+    line-height:1.28;
+    margin:6px 0 4px;
+    color:var(--green-deep);
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center;
+    gap:clamp(10px, 3vw, 30px);
+  }
+  /* حرف الواو الخطّي بين اسمي العروسين */
+  .names .wa{
+    font-family:var(--font-ar-display);
+    font-weight:700;
+    font-size:.6em;
+    line-height:1;
+    color:var(--gold);
+    align-self:center;
+    transform:translateY(-.16em);
+    padding:0 .12em;
+  }
+
+  .family-line{
+    font-size:clamp(.82rem, 2.2vw, .95rem);
+    color:var(--ink-soft);
+    font-weight:300;
+    margin:2px 0 0;
+  }
+
+  /* ---------- فاصل زخرفي ---------- */
+  .divider{
+    display:block;
+    width:min(340px, 78%);
+    height:40px;
+    object-fit:fill;
+    margin:clamp(22px,4vw,34px) auto;
+    color:var(--gold);
+    opacity:.85;
+  }
+
+  /* ---------- عنوان القسم ---------- */
+  .section-title{
+    text-align:center;
+    margin:0 0 clamp(18px,3vw,28px);
+    font-family:var(--font-ar-display);
+    font-size:clamp(1.5rem,5vw,2.15rem);
+    font-weight:700;
+    color:var(--green-deep);
+    position:relative;
+    z-index:2;
+  }
+  .section-title::after{
+    content:"";
+    display:block;
+    width:84px; height:1px;
+    margin:12px auto 0;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* ---------- برنامج المناسبات (جدول زمني) ---------- */
+  .program{
+    margin:0 0 clamp(20px,3vw,30px);
+    position:relative;
+    z-index:2;
+  }
+  .timeline{ display:flex; flex-direction:column; }
+  .event{
+    display:flex;
+    align-items:stretch;
+    gap:clamp(10px,2vw,18px);
+  }
+  .rail{
+    flex:0 0 auto;
+    width:38px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .rail::before{
+    content:"";
+    position:absolute;
+    top:0; bottom:0; left:50%;
+    width:2px;
+    transform:translateX(-50%);
+    background:rgba(176,141,66,.42);
+  }
+  .event:first-child .rail::before{ top:50%; }
+  .event:last-child .rail::before{ bottom:50%; }
+  .node{
+    position:relative;
+    z-index:1;
+    width:34px; height:34px;
+    border-radius:50%;
+    background:#fffdf9;
+    border:2px solid var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--green);
+    box-shadow:0 0 0 5px rgba(176,141,66,.1);
+    transition:transform .35s ease, box-shadow .35s ease;
+  }
+  .node svg{ width:16px; height:16px; }
+  .event:hover .node{
+    transform:scale(1.12);
+    box-shadow:0 0 0 7px rgba(176,141,66,.16);
+  }
+  .event-card{
+    flex:1 1 auto;
+    display:flex;
+    align-items:center;
+    gap:clamp(12px,2vw,18px);
+    margin-bottom:clamp(12px,2vw,18px);
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(176,141,66,.3);
+    border-radius:16px;
+    padding:clamp(14px,2.2vw,20px) clamp(16px,2.4vw,22px);
+    transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease, background .35s ease;
+  }
+  .event:hover .event-card{
+    transform:translateX(-6px);
+    box-shadow:0 18px 34px -22px rgba(13,47,39,.55);
+    border-color:var(--gold);
+    background:#fff;
+  }
+  .event:last-child .event-card{ margin-bottom:0; }
+
+  .event-info{
+    flex:1 1 auto;
+    min-width:0;
+  }
+
+  .event-thumb{
+    flex:0 0 auto;
+    width:clamp(68px,12vw,122px);
+    aspect-ratio:1 / 1;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid rgba(176,141,66,.32);
+    background:linear-gradient(160deg,#fffdf9 0%,#f4eee2 100%);
+    transition:transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  .event-thumb img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+  }
+  .event:hover .event-thumb{
+    transform:scale(1.05);
+    border-color:var(--gold);
+    box-shadow:0 12px 22px -16px rgba(13,47,39,.55);
+  }
+
+  .map-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:8px;
+    font-size:clamp(.78rem,2vw,.88rem);
+    font-weight:500;
+    color:var(--green);
+    text-decoration:none;
+    border-bottom:1px dashed rgba(20,73,60,.45);
+    padding-bottom:2px;
+    unicode-bidi:isolate;
+    transition:color .3s ease, border-color .3s ease;
+  }
+  .map-link:hover{ color:var(--gold); border-color:var(--gold); }
+  .map-link svg{ width:14px; height:14px; flex:0 0 auto; }
+  .event-time{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:clamp(.76rem,1.9vw,.86rem);
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .event-time .tag{
+    display:inline-block;
+    padding:2px 10px;
+    border-radius:999px;
+    background:rgba(20,73,60,.08);
+    color:var(--green);
+    font-size:.72rem;
+    letter-spacing:.04em;
+  }
+  .event-card h3{
+    margin:0 0 4px;
+    font-family:var(--font-ar-display);
+    font-size:clamp(1.2rem,3.6vw,1.55rem);
+    font-weight:700;
+    color:var(--green-deep);
+  }
+  .event-card p.event-place{
+    margin:0;
+    font-size:clamp(.88rem,2.2vw,1rem);
+    font-weight:300;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- RSVP ---------- */
+  .rsvp{
+    text-align:center;
+    position:relative;
+    z-index:2;
+  }
+  .rsvp .note{
+    max-width:36rem;
+    margin:0 auto clamp(16px,2.6vw,22px);
+    font-weight:300;
+    color:var(--ink-soft);
+    font-size:clamp(.9rem,2.3vw,1rem);
+  }
+  .contact-row{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:clamp(16px,2.6vw,22px);
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:13px 26px;
+    border-radius:999px;
+    font-family:var(--font-ar-body);
+    font-size:clamp(.88rem,2.2vw,.98rem);
+    font-weight:600;
+    text-decoration:none;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .3s ease, box-shadow .3s ease, background .3s ease, color .3s ease, border-color .3s ease;
+  }
+  .btn svg{ width:18px; height:18px; }
+  .btn-primary{
+    background:var(--green);
+    color:#fdfaf3;
+    box-shadow:0 14px 26px -16px rgba(13,47,39,.8);
+  }
+  .btn-primary:hover{
+    background:var(--green-deep);
+    transform:translateY(-3px);
+    box-shadow:0 20px 32px -16px rgba(13,47,39,.9);
+  }
+  .btn-ghost{
+    background:transparent;
+    color:var(--green-deep);
+    border-color:rgba(176,141,66,.6);
+  }
+  .btn-ghost:hover{
+    background:rgba(176,141,66,.12);
+    border-color:var(--gold);
+    transform:translateY(-3px);
+  }
+
+  .dress{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-size:clamp(.8rem,2.1vw,.92rem);
+    font-weight:400;
+    color:var(--ink-soft);
+    border-top:1px solid rgba(176,141,66,.35);
+    padding-top:14px;
+    margin-top:4px;
+  }
+  .dress b{ color:var(--green-deep); font-weight:600; }
+  .dress .dot{
+    width:11px; height:11px; border-radius:50%;
+    background:linear-gradient(135deg,#e9dcc4,#c9a0a0);
+    border:1px solid rgba(176,141,66,.6);
+    display:inline-block;
+  }
+
+  .closing{
+    text-align:center;
+    font-family:var(--font-ar-display);
+    font-size:clamp(1rem,2.8vw,1.22rem);
+    color:var(--gold);
+    margin:clamp(22px,4vw,32px) 0 0;
+    line-height:2;
+  }
+
+  footer.foot{
+    text-align:center;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    opacity:.75;
+    margin:22px auto 6px;
+    letter-spacing:.12em;
+    position:relative;
+    z-index:1;
+  }
+  footer.foot p{ margin:.3em 0; }
+  .replay-curtain{
+    color:var(--green);
+    text-decoration:none;
+    border-bottom:1px dotted rgba(20,73,60,.5);
+    padding-bottom:1px;
+    transition:color .3s ease, border-color .3s ease;
+  }
+  .replay-curtain:hover{ color:var(--gold); border-color:var(--gold); }
+
+  /* ---------- الجوال ---------- */
+  @media (max-width:720px){
+    .names{ gap:2px; flex-direction:column; }
+    .names .wa{ font-size:.42em; transform:translateY(-.06em); }
+    .card{ border-radius:18px; }
+    .corner{ opacity:.55; }
+    .event-card{ gap:12px; }
+    .event-thumb{ width:68px; border-radius:10px; }
+    .map-link{ margin-top:6px; }
+    .event:hover .event-card{ transform:none; }
+    .event:hover .event-thumb{ transform:none; }
+  }
+  @media (max-width:400px){
+    .btn{ width:100%; justify-content:center; }
+  }
+
+  /* ---------- تقليل الحركة ---------- */
+  @media (prefers-reduced-motion:reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+
+  /* ---------- الطباعة ---------- */
+  @media print{
+    body{ background:#fff; padding:0; }
+    .curtain{ display:none; }
+    .card{ box-shadow:none; border:1px solid #c9b68a; padding:26mm 18mm; border-radius:0; }
+    .event-card{ background:#fff; break-inside:avoid; }
+    .event{ break-inside:avoid; }
+    .rail::before{ background:#c9b68a; }
+    .section-title{ break-after:avoid; }
+    .btn{ border:1px solid #14493c !important; background:#fff !important; color:#14493c !important; box-shadow:none !important; }
+    .names{ color:#0d2f27; }
+    footer.foot{ margin-top:8mm; }
+    @page{ margin:12mm; }
+  }
+</style>
+<noscript><style>.curtain{ display:none !important; }</style></noscript>
+</head>
+<body>
+
+<!-- ستارة الافتتاح: تنفتح تلقائيًا عند التحميل، ويمكن النقر عليها لإعادة فتحها -->
+<div class="curtain" id="curtain">
+  <div class="curtain-panel left"></div>
+  <div class="curtain-panel right"></div>
+  <div class="curtain-seal" role="button" tabindex="0" aria-label="افتح الدعوة">
+    <span class="ring">
+      <img src="images/curatin-seal.png" alt="" aria-hidden="true">
+    </span>
+    <span class="hint">دعوة زفاف</span>
+    <br/>
+    <span class="sub-hint">اضغط للدخول</span>
+  </div>
+</div>
+
+<main class="sheet">
+  <article class="card">
+
+    <!-- زخارف الزوايا الزهرية -->
+    <img class="corner corner-tr" src="images/top-right-corner.png" alt="" aria-hidden="true">
+    <img class="corner corner-tl" src="images/top-right-corner.png" alt="" aria-hidden="true">
+    <img class="corner corner-br" src="images/top-right-corner.png" alt="" aria-hidden="true">
+    <img class="corner corner-bl" src="images/top-right-corner.png" alt="" aria-hidden="true">
+
+    <!-- ================= الترويسة ================= -->
+    <header class="head">
+      <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      <p class="eyebrow">دعوة زفاف</p>
+
+      <!-- الشعار / الحرفان المتشابكان -->
+      <img class="monogram" src="images/monogram.png" alt="شعار العروسين">
+
+      <p class="invite-line">بقلوبٍ مفعمةٍ بالفرح والامتنان، يسعدنا أن ندعوكم لمشاركتنا لحظةَ بدايةِ حكايتنا</p>
+
+      <h1 class="names">
+        <span id="bride-name"></span>
+        <span id="name-connector" class="wa" aria-hidden="true"></span>
+        <span id="groom-name"></span>
+      </h1>
+
+      <p class="family-line">عائلة السيد <span id="bride-father-name"></span> &nbsp;·&nbsp; عائلة السيد <span id="groom-father-name"></span></p>
+
+      <!-- فاصل زخرفي -->
+      <img class="divider" src="images/h-divider.png" alt="" aria-hidden="true">
+    </header>
+
+    <!-- ================= برنامج المناسبات ================= -->
+    <section class="program" aria-label="برنامج المناسبات">
+      <h2 class="section-title">برنامج المناسبات</h2>
+      <div class="timeline" id="ceremony-timeline"></div>
+    </section>
+
+    <!-- ================= تأكيد الحضور ================= -->
+    <section class="rsvp" aria-label="تأكيد الحضور والتواصل">
+      
+      <p class="closing">حضوركم أجملُ هديةٍ نتمنّاها &nbsp;·&nbsp; وبمشاركتكم تكتمل فرحتنا</p>
+    </section>
+
+  </article>
+
+  <footer class="foot">
+    <p>﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾</p>
+  </footer>
+</main>
+
+<script>
+  var INVITATION = {
+    bride: {
+      name: 'نور الهدى',
+      father: 'أحمد الحسيني'
+    },
+    groom: {
+      name: 'كريم عبد الله',
+      father: 'محمود العزّاوي'
+    },
+    monogramConnector: 'و',
+    ceremonies: [
+      {
+        day: 'السبت 19 سبتمبر',
+        time: '9:00 مساءً',
+        name: 'حفل النزول',
+        place: 'قاعة ابن سينا نزل نهر الفنون طريق تنيور كلم 3،5، صفاقس',
+        image: 'images/hotel.jpg',
+        mapUrl: 'https://maps.app.goo.gl/zzfgQeBBnfvdsk8X8',
+        icon: 'clock'
+      },
+      {
+        day: 'الأحد 20 سبتمبر',
+        time: '3:00 بعد الزوال',
+        name: 'حفل الزفاف',
+        place: 'قاعة المؤتمرات نزل نهر الفنون طريق تنيور كلم 3،5، صفاقس',
+        image: 'images/hotel.jpg',
+        mapUrl: 'https://maps.app.goo.gl/zzfgQeBBnfvdsk8X8',
+        icon: 'clock'
+      }
+    ]
+  };
+
+  (function renderInvitationContent(){
+    var setText = function(selector, value){
+      var element = document.querySelector(selector);
+      if(element) element.textContent = value;
+    };
+
+    setText('#page-title', 'دعوة زفاف — ' + INVITATION.bride.name + ' & ' + INVITATION.groom.name);
+    setText('#bride-name', INVITATION.bride.name);
+    setText('#groom-name', INVITATION.groom.name);
+    setText('#name-connector', INVITATION.monogramConnector);
+    setText('#bride-father-name', INVITATION.bride.father);
+    setText('#groom-father-name', INVITATION.groom.father);
+
+    var icons = {
+      location: '<path d="M12 21c4-4 7-7.6 7-11a7 7 0 1 0-14 0c0 3.4 3 7 7 11z"/><circle cx="12" cy="10" r="2.4"/>',
+      clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/>',
+      heart: '<path d="M12 21s-7-4.4-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 12c0 4.6-7 9-7 9z"/>'
+    };
+    var timeline = document.getElementById('ceremony-timeline');
+    if(timeline){
+      timeline.innerHTML = INVITATION.ceremonies.map(function(ceremony){
+        return '<div class="event">' +
+          '<div class="rail"><div class="node"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            (icons[ceremony.icon] || icons.location) +
+          '</svg></div></div>' +
+          '<div class="event-card"><div class="event-info">' +
+            '<span class="event-time"><span class="tag">' + ceremony.day + '</span> · ' + ceremony.time + '</span>' +
+            '<h3>' + ceremony.name + '</h3><p class="event-place">' + ceremony.place + '</p>' +
+            '<a class="map-link" href="' + ceremony.mapUrl + '" target="_blank" rel="noopener noreferrer">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                '<path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>' +
+              '</svg>عرض على الخريطة</a></div>' +
+            '<div class="event-thumb"><img src="' + ceremony.image + '" alt="رسم توضيحي لمكان ' + ceremony.name + '"></div></div>' +
+        '</div>';
+      }).join('');
+    }
+  })();
+
+  (function(){
+    var curtain = document.getElementById('curtain');
+    if(!curtain) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var seal = curtain.querySelector('.curtain-seal');
+
+    function open(){ curtain.classList.add('open'); }
+    function close(){ curtain.classList.remove('open'); }
+    function replay(){
+      close();
+      void curtain.offsetWidth;          // إعادة التدفق لإعادة تشغيل الانتقال
+      window.setTimeout(open, 60);
+    }
+
+    // النقر على الستارة أو الختم يفتحها
+    curtain.addEventListener('click', open);
+    if(seal){
+      seal.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+      });
+    }
+
+    // إعادة عرض الستارة
+    Array.prototype.forEach.call(document.querySelectorAll('.replay-curtain'), function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        if(reduce){ return; }
+        replay();
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
