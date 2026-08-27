@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="images/favicon.jpeg" />
 <title id="page-title">دعوة زفاف</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,8 +99,11 @@
 
   .curtain-seal{
     position:absolute;
-    left:50%; top:50%;
-    transform:translate(-50%,-50%);
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
     z-index:2;
     text-align:center;
     color:var(--gold-light);
@@ -108,17 +112,21 @@
   }
   .curtain.open .curtain-seal{
     opacity:0;
-    transform:translate(-50%,-50%) scale(.55);
+    transform:scale(.55);
   }
   .curtain-seal .ring{
-    width:104px; height:104px;
+    width:112px; height:112px;
     margin:0 auto 14px;
     border-radius:50%;
     border:1px solid rgba(216,189,126,.7);
     display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(circle at 50% 38%, rgba(216,189,126,.22), rgba(13,47,39,0));
+    background:radial-gradient(circle at 50% 38%, rgba(216,189,126,.34), rgba(13,47,39,0));
   }
-  .curtain-seal .ring img{ width:76px; height:76px; object-fit:contain; }
+  .curtain-seal .ring img{ width:84px; height:84px; object-fit:contain; }
+  .curtain-seal .hint,
+  .curtain-seal .sub-hint{
+    text-shadow:0 2px 3px rgba(0,0,0,.9), 0 4px 10px rgba(0,0,0,.7);
+  }
   .curtain-seal .hint{ font-family:var(--font-ar-display); font-size:1.25rem; letter-spacing:.08em; }
   .curtain-seal .sub-hint{ font-size:.8rem; opacity:.82; margin-top:4px; letter-spacing:.04em; }
 
@@ -196,7 +204,7 @@
   }
 
   .monogram{
-    width:clamp(112px, 22vw, 156px);
+    width:clamp(146px, 26vw, 187px);
     height:auto;
     display:block;
     margin:4px auto 14px;
@@ -569,7 +577,7 @@
 </head>
 <body>
 
-<!-- ستارة الافتتاح: تنفتح تلقائيًا عند التحميل، ويمكن النقر عليها لإعادة فتحها -->
+<!-- ستارة الافتتاح: يمكن تعطيلها من خلال INVITATION.showCurtain -->
 <div class="curtain" id="curtain">
   <div class="curtain-panel left"></div>
   <div class="curtain-panel right"></div>
@@ -630,12 +638,13 @@
   </article>
 
   <footer class="foot">
-    <p>﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾</p>
+    <p>﴿ وَمِنْ ءَايَـٰتِهِۦٓ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًۭا لِّتَسْكُنُوٓا۟ إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةًۭ وَرَحْمَةً ﴾</p>
   </footer>
 </main>
 
 <script>
   var INVITATION = {
+    showCurtain: false,  // true لإظهار الستارة عند فتح الدعوة، false لتخطيها مباشرة
     bride: {
       name: 'ياسمين',
       father: 'محمد ولها'
@@ -650,18 +659,18 @@
         time: '9:00 مساءً',
         name: 'حفل النزول',
         place: 'قاعة ابن سينا نزل نهر الفنون طريق تنيور كلم 3،5، صفاقس',
-        image: 'images/hotel-ai-day.jpg',
+        image: 'images/hotel-ai-night.jpg',
         mapUrl: 'https://maps.app.goo.gl/zzfgQeBBnfvdsk8X8',
-        icon: 'clock'
+        icon: 'cal_watch'
       },
       {
         day: 'الأحد 20 سبتمبر',
         time: '3:00 بعد الزوال',
         name: 'حفل الزفاف',
         place: 'قاعة المؤتمرات نزل نهر الفنون طريق تنيور كلم 3،5، صفاقس',
-        image: 'images/hotel-ai-night.jpg',
+        image: 'images/hotel-ai-day.jpg',
         mapUrl: 'https://maps.app.goo.gl/zzfgQeBBnfvdsk8X8',
-        icon: 'clock'
+        icon: 'cal_watch'
       }
     ]
   };
@@ -681,6 +690,7 @@
     var icons = {
       location: '<path d="M12 21c4-4 7-7.6 7-11a7 7 0 1 0-14 0c0 3.4 3 7 7 11z"/><circle cx="12" cy="10" r="2.4"/>',
       clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/>',
+      cal_watch: '<path d="M17.5,11.039c-3.584,0-6.5,2.916-6.5,6.5,0,3.563,2.916,6.461,6.5,6.461s6.5-2.916,6.5-6.5c0-3.563-2.916-6.461-6.5-6.461Zm0,11.961c-3.032,0-5.5-2.45-5.5-5.461,0-3.033,2.468-5.5,5.5-5.5s5.5,2.45,5.5,5.461c0,3.033-2.468,5.5-5.5,5.5Zm1.354-4.854c.195,.195,.195,.512,0,.707-.098,.098-.226,.146-.354,.146s-.256-.049-.354-.146l-1-1c-.094-.094-.146-.221-.146-.354v-2c0-.276,.224-.5,.5-.5s.5,.224,.5,.5v1.793l.854,.854Zm.646-16.146h-1.5V.5c0-.276-.224-.5-.5-.5s-.5,.224-.5,.5v1.5H7V.5c0-.276-.224-.5-.5-.5s-.5,.224-.5,.5v1.5h-1.5C2.019,2,0,4.019,0,6.5v13c0,2.481,2.019,4.5,4.5,4.5h6c.276,0,.5-.224,.5-.5s-.224-.5-.5-.5H4.5c-1.93,0-3.5-1.57-3.5-3.5V9H23v1.5c0,.276,.224,.5,.5,.5s.5-.224,.5-.5V6.5c0-2.481-2.019-4.5-4.5-4.5ZM1,8v-1.5c0-1.93,1.57-3.5,3.5-3.5h15c1.93,0,3.5,1.57,3.5,3.5v1.5H1Z"/>',
       heart: '<path d="M12 21s-7-4.4-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 12c0 4.6-7 9-7 9z"/>'
     };
     var timeline = document.getElementById('ceremony-timeline');
@@ -706,10 +716,17 @@
   (function(){
     var curtain = document.getElementById('curtain');
     if(!curtain) return;
+    if(!INVITATION.showCurtain){
+      curtain.style.display = 'none';
+      return;
+    }
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var seal = curtain.querySelector('.curtain-seal');
 
-    function open(){ curtain.classList.add('open'); }
+    function open(){
+      window.scrollTo(0, 0);
+      curtain.classList.add('open');
+    }
     function close(){ curtain.classList.remove('open'); }
     function replay(){
       close();
