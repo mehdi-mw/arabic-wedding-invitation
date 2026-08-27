@@ -160,10 +160,10 @@
   /* ---------- زخارف الزوايا الزهرية ---------- */
   .corner{
     position:absolute;
-    width:clamp(84px, 15vw, 165px);
+    width:clamp(126px, 22vw, 247px);
     height:auto;
     color:var(--gold);
-    opacity:.72;
+    opacity:1;
     pointer-events:none;
   }
   .corner-tr{ top:clamp(14px,2vw,24px); right:clamp(14px,2vw,24px); }
@@ -215,44 +215,52 @@
   .names{
     font-family:var(--font-ar-display);
     font-weight:700;
-    font-size:clamp(2.4rem, 9.5vw, 4.7rem);
+    font-size:clamp(2.1rem, 7vw, 4.2rem);
     line-height:1.28;
     margin:6px 0 4px;
     color:var(--green-deep);
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+    grid-template-rows:auto auto;
     align-items:center;
-    gap:clamp(10px, 3vw, 30px);
+    width:min(100%, 28rem);
+    margin:6px auto 4px;
+    column-gap:clamp(6px, 1.2vw, 12px);
+    direction:ltr;
   }
-  /* حرف الواو الخطّي بين اسمي العروسين */
-  .names .wa{
+  .names > span{
+    min-width:0;
+    direction:rtl;
+  }
+  .names .bride-name{ grid-column:1; grid-row:1; }
+  .names .name-connector{
+    grid-column:2;
+    grid-row:1;
+    display:block;
+    width:clamp(36px,6vw,64px);
+    height:auto;
+  }
+  .names .groom-name{ grid-column:3; grid-row:1; }
+  .names .bride-father-name{ grid-column:1; grid-row:2; }
+  .names .empty-name-cell{ grid-column:2; grid-row:2; }
+  .names .groom-father-name{ grid-column:3; grid-row:2; }
+  .names .father-name{
     font-family:var(--font-ar-display);
-    font-weight:700;
-    font-size:.6em;
-    line-height:1;
-    color:var(--gold);
-    align-self:center;
-    transform:translateY(-.16em);
-    padding:0 .12em;
-  }
-
-  .family-line{
-    font-size:clamp(.82rem, 2.2vw, .95rem);
+    font-size:clamp(.78rem,2vw,1rem);
+    font-weight:400;
+    line-height:1.4;
     color:var(--ink-soft);
-    font-weight:300;
-    margin:2px 0 0;
+    white-space:nowrap;
   }
-
   /* ---------- فاصل زخرفي ---------- */
   .divider{
     display:block;
     width:min(340px, 78%);
-    height:40px;
+    /* height:40px; */
     object-fit:fill;
     margin:clamp(22px,4vw,34px) auto;
     color:var(--gold);
-    opacity:.85;
+    /* opacity:.85; */
   }
 
   /* ---------- عنوان القسم ---------- */
@@ -523,8 +531,8 @@
 
   /* ---------- الجوال ---------- */
   @media (max-width:720px){
-    .names{ gap:2px; flex-direction:column; }
-    .names .wa{ font-size:.42em; transform:translateY(-.06em); }
+    .names{ column-gap:2px; }
+    .names .father-name{ font-size:.76rem; }
     .card{ border-radius:18px; }
     .corner{ opacity:.55; }
     .event-card{ gap:12px; }
@@ -567,7 +575,7 @@
   <div class="curtain-panel right"></div>
   <div class="curtain-seal" role="button" tabindex="0" aria-label="افتح الدعوة">
     <span class="ring">
-      <img src="images/curatin-seal.png" alt="" aria-hidden="true">
+      <img src="images/curtain-seal.png" alt="" aria-hidden="true">
     </span>
     <span class="hint">دعوة زفاف</span>
     <br/>
@@ -595,12 +603,13 @@
       <p class="invite-line">بقلوبٍ مفعمةٍ بالفرح والامتنان، يسعدنا أن ندعوكم لمشاركتنا لحظةَ بدايةِ حكايتنا</p>
 
       <h1 class="names">
-        <span id="groom-name"></span>
-        <span id="name-connector" class="wa" aria-hidden="true"></span>
-        <span id="bride-name"></span>
+        <span id="bride-name" class="bride-name"></span>
+        <img id="name-connector" class="name-connector" src="images/arabic-ampersand.png" alt="" aria-hidden="true">
+        <span id="groom-name" class="groom-name"></span>
+        <span class="father-name bride-father-name">عائلة السيد <span id="bride-father-name"></span></span>
+        <span class="empty-name-cell" aria-hidden="true"></span>
+        <span class="father-name groom-father-name">عائلة السيد <span id="groom-father-name"></span></span>
       </h1>
-
-      <p class="family-line">عائلة السيد <span id="groom-father-name"></span> &nbsp;·&nbsp; عائلة السيد <span id="bride-father-name"></span></p>
 
       <!-- فاصل زخرفي -->
       <img class="divider" src="images/h-divider.png" alt="" aria-hidden="true">
@@ -635,14 +644,13 @@
       name: 'حمدي',
       father: 'محمود السماوي'
     },
-    monogramConnector: 'و',
     ceremonies: [
       {
         day: 'السبت 19 سبتمبر',
         time: '9:00 مساءً',
         name: 'حفل النزول',
         place: 'قاعة ابن سينا نزل نهر الفنون طريق تنيور كلم 3،5، صفاقس',
-        image: 'images/hotel.jpg',
+        image: 'images/hotel-ai-day.jpg',
         mapUrl: 'https://maps.app.goo.gl/zzfgQeBBnfvdsk8X8',
         icon: 'clock'
       },
@@ -651,7 +659,7 @@
         time: '3:00 بعد الزوال',
         name: 'حفل الزفاف',
         place: 'قاعة المؤتمرات نزل نهر الفنون طريق تنيور كلم 3،5، صفاقس',
-        image: 'images/hotel.jpg',
+        image: 'images/hotel-ai-night.jpg',
         mapUrl: 'https://maps.app.goo.gl/zzfgQeBBnfvdsk8X8',
         icon: 'clock'
       }
@@ -667,7 +675,6 @@
     setText('#page-title', 'دعوة زفاف — ' + INVITATION.bride.name + ' & ' + INVITATION.groom.name);
     setText('#bride-name', INVITATION.bride.name);
     setText('#groom-name', INVITATION.groom.name);
-    setText('#name-connector', INVITATION.monogramConnector);
     setText('#bride-father-name', INVITATION.bride.father);
     setText('#groom-father-name', INVITATION.groom.father);
 
