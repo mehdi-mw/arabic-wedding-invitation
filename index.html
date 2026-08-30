@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" type="image/png" href="images/favicon.jpeg" />
 <title id="page-title">دعوة زفاف</title>
+<meta name="description" content="دعوة زفاف ياسمين وحمدي" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="دعوة زفاف — ياسمين و حمدي" />
+<meta property="og:description" content="دعوة زفاف ياسمين وحمدي" />
+<meta property="og:image" content="images/social-media-thumbnail.jpeg" />
+<meta property="og:image:alt" content="دعوة زفاف ياسمين و حمدي" />
+<meta property="og:image:width" content="1254" />
+<meta property="og:image:height" content="1254" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="دعوة زفاف — ياسمين و حمدي" />
+<meta name="twitter:description" content="دعوة زفاف ياسمين وحمدي" />
+<meta name="twitter:image" content="images/social-media-thumbnail.jpeg" />
+<meta name="twitter:image:alt" content="دعوة زفاف ياسمين و حمدي" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -221,43 +234,68 @@
   }
 
   .names{
+    width:min(100%, 30rem);
+    margin:6px auto 4px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:clamp(10px, 2vw, 18px);
+    direction:ltr;
+  }
+  .parents-names,
+  .couple-names{
+    width:100%;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+    align-items:center;
+    column-gap:clamp(6px, 1.2vw, 12px);
+  }
+  .parents-names{
+    font-family:var(--font-ar-display);
+    font-weight:700;
+    line-height:1.28;
+    color:var(--green-deep);
+  }
+  .couple-names{
     font-family:var(--font-ar-display);
     font-weight:700;
     font-size:clamp(2.1rem, 7vw, 4.2rem);
     line-height:1.28;
-    margin:6px 0 4px;
     color:var(--green-deep);
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
-    grid-template-rows:auto auto;
-    align-items:center;
-    width:min(100%, 28rem);
-    margin:6px auto 4px;
-    column-gap:clamp(6px, 1.2vw, 12px);
-    direction:ltr;
   }
-  .names > span{
+  .names > *{ min-width:0; }
+  .names .bride-name,
+  .names .groom-name,
+  .names .bride-father-name,
+  .names .groom-father-name{
+    display:block;
     min-width:0;
     direction:rtl;
+    text-align:center;
   }
-  .names .bride-name{ grid-column:1; grid-row:1; }
+  .names .bride-name,
+  .names .groom-name{ font-size:inherit; }
   .names .name-connector{
-    grid-column:2;
-    grid-row:1;
     display:block;
-    width:clamp(36px,6vw,64px);
+    width:clamp(32px,5vw,58px);
     height:auto;
   }
-  .names .groom-name{ grid-column:3; grid-row:1; }
-  .names .bride-father-name{ grid-column:1; grid-row:2; }
-  .names .empty-name-cell{ grid-column:2; grid-row:2; }
-  .names .groom-father-name{ grid-column:3; grid-row:2; }
   .names .father-name{
     font-family:var(--font-ar-display);
-    font-size:clamp(.78rem,2vw,1rem);
+    font-size:clamp(.94rem,2.4vw,1.2rem);
     font-weight:400;
     line-height:1.4;
     color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .names .parents-line{
+    margin:0;
+    font-family:var(--font-ar-body);
+    font-size:clamp(.8rem,2vw,.96rem);
+    line-height:1.8;
+    color:var(--green-deep);
+    text-align:center;
+    letter-spacing:.02em;
     white-space:nowrap;
   }
   /* ---------- فاصل زخرفي ---------- */
@@ -608,16 +646,25 @@
       <!-- الشعار / الحرفان المتشابكان -->
       <img class="monogram" src="images/monogram.png" alt="شعار العروسين">
 
-      <p class="invite-line">بقلوبٍ مفعمةٍ بالفرح والامتنان، يسعدنا أن ندعوكم لمشاركتنا لحظةَ بدايةِ حكايتنا</p>
+      <p class="invite-line">
+        بعد اهداءكم عطر التحية و أزكى السلام تتشرف عائلتي
+      </p>
 
-      <h1 class="names">
-        <span id="bride-name" class="bride-name"></span>
-        <img id="name-connector" class="name-connector" src="images/arabic-ampersand.png" alt="" aria-hidden="true">
-        <span id="groom-name" class="groom-name"></span>
-        <span class="father-name bride-father-name">عائلة السيد <span id="bride-father-name"></span></span>
-        <span class="empty-name-cell" aria-hidden="true"></span>
-        <span class="father-name groom-father-name">عائلة السيد <span id="groom-father-name"></span></span>
-      </h1>
+      <div class="names" aria-label="أسماء العروسين">
+        <div class="parents-names" aria-label="أسماء الأبوين">
+          <span class="father-name bride-father-name">السيد <span id="bride-father-name"></span> و حرمه</span>
+          <img class="name-connector" src="images/arabic-ampersand.png" alt="" aria-hidden="true">
+          <span class="father-name groom-father-name">السيد <span id="groom-father-name"></span> و حرمه</span>
+        </div>
+
+        <p class="parents-line">بدعوتكم لحضور حفل زفاف إبنيهما</p>
+
+        <div class="couple-names" aria-label="اسماء العروسين">
+          <span id="bride-name" class="bride-name"></span>
+          <img id="name-connector" class="name-connector" src="images/arabic-ampersand.png" alt="" aria-hidden="true">
+          <span id="groom-name" class="groom-name"></span>
+        </div>
+      </div>
 
       <!-- فاصل زخرفي -->
       <img class="divider" src="images/h-divider.png" alt="" aria-hidden="true">
@@ -632,7 +679,9 @@
     <!-- ================= تأكيد الحضور ================= -->
     <section class="rsvp" aria-label="تأكيد الحضور والتواصل">
       
-      <p class="closing">حضوركم أجملُ هديةٍ نتمنّاها &nbsp;·&nbsp; وبمشاركتكم تكتمل فرحتنا</p>
+      <p class="closing">
+        و لكم العاقبة في الأفراح و المسرات
+      </p>
     </section>
 
   </article>
