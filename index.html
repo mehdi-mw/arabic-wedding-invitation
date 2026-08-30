@@ -693,7 +693,7 @@
 
 <script>
   var INVITATION = {
-    showCurtain: true,  // true لإظهار الستارة عند فتح الدعوة، false لتخطيها مباشرة
+    showCurtain: false,  // true لإظهار الستارة عند فتح الدعوة، false لتخطيها مباشرة
     bride: {
       name: 'ياسمين',
       father: 'محمد ولها'
@@ -704,31 +704,37 @@
     },
     ceremonies: [
       {
+        id: 1,
         day: 'الأحد 13 سبتمبر',
         time: '5:30 مساءً',
         name: 'عقد القران',
         place: 'جامع الرحمة سيدي عباس طريق ڨرمدة كلم 4، صفاقس',
         image: 'images/mosque.jpeg',
         mapUrl: 'https://maps.app.goo.gl/ZTEpHbraLbvAeeSq9',
-        icon: 'cal_watch'
+        icon: 'cal_watch',
+        versions:[2,3]
       },
       {
+        id: 2,
         day: 'السبت 19 سبتمبر',
         time: '9:00 مساءً',
         name: 'حفل النزول',
         place: 'قاعة ابن سينا نزل نهر الفنون طريق تنيور كلم 3،5، صفاقس',
         image: 'images/hotel-ai-night.jpg',
         mapUrl: 'https://maps.app.goo.gl/zzfgQeBBnfvdsk8X8',
-        icon: 'cal_watch'
+        icon: 'cal_watch',
+        versions:[1,2]
       },
       {
+        id: 3,
         day: 'الأحد 20 سبتمبر',
         time: '3:00 بعد الزوال',
         name: 'حفل الزفاف',
         place: 'قاعة المؤتمرات نزل نهر الفنون طريق تنيور كلم 3،5، صفاقس',
         image: 'images/hotel-ai-day.jpg',
         mapUrl: 'https://maps.app.goo.gl/zzfgQeBBnfvdsk8X8',
-        icon: 'cal_watch'
+        icon: 'cal_watch',
+        versions: [1,2,3,"default"]
       }
     ]
   };
@@ -753,7 +759,42 @@
     };
     var timeline = document.getElementById('ceremony-timeline');
     if(timeline){
-      timeline.innerHTML = INVITATION.ceremonies.map(function(ceremony){
+      // Parse URL query parameters
+      var urlParams = new URLSearchParams(window.location.search);
+      var versionParam = urlParams.get('v');
+      
+      // Filter ceremonies by version
+      var filteredCeremonies = INVITATION.ceremonies;
+      if(versionParam){
+        // Try to filter by the v parameter (coerce to number if possible)
+        var versionValue = isNaN(versionParam) ? versionParam : parseInt(versionParam, 10);
+        filteredCeremonies = INVITATION.ceremonies.filter(function(c){
+          return c.versions && c.versions.indexOf(versionValue) !== -1;
+        });
+        
+        // Fall back to "default" if no ceremonies matched
+        if(filteredCeremonies.length === 0){
+          filteredCeremonies = INVITATION.ceremonies.filter(function(c){
+            return c.versions && c.versions.indexOf("default") !== -1;
+          });
+        }
+      }
+      
+      // Sort by id (incremental)
+      filteredCeremonies.sort(function(a, b){
+        return a.id - b.id;
+      });
+      
+      // Hide section title if only one ceremony
+      var programSection = document.querySelector('.program');
+      if(programSection){
+        var sectionTitle = programSection.querySelector('.section-title');
+        if(sectionTitle && filteredCeremonies.length === 1){
+          sectionTitle.style.display = 'none';
+        }
+      }
+      
+      timeline.innerHTML = filteredCeremonies.map(function(ceremony){
         return '<div class="event">' +
           '<div class="rail"><div class="node"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
             (icons[ceremony.icon] || icons.location) +
