@@ -68,6 +68,22 @@
     unicode-bidi:isolate;
   }
 
+
+
+/*quran font*/
+@font-face {
+  font-family: "QPCV2";
+  src:
+  url("https://quranfonts.com/fonts/QPC V2 Font/extracted/p1.woff2") format("woff2");
+  font-display: swap;
+}
+.quran-text {
+  font-family: 'QPCV2';
+  direction: rtl;
+}
+
+
+
   /* ---------- ستارة الافتتاح ---------- */
   .curtain{
     position:fixed;
@@ -687,7 +703,7 @@
   </article>
 
   <footer class="foot">
-    <p>﴿ وَمِنْ ءَايَـٰتِهِۦٓ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًۭا لِّتَسْكُنُوٓا۟ إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةًۭ وَرَحْمَةً ﴾</p>
+    <p class="quran-text">﴿ وَمِنْ ءَايَـٰتِهِۦٓ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًۭا لِّتَسْكُنُوٓا۟ إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةًۭ وَرَحْمَةً ﴾</p>
   </footer>
 </main>
 
